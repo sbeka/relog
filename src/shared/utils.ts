@@ -6,13 +6,13 @@ export function getLabelType(type: string) {
       return 'Доставка';
 
     case 'pickup':
-      return 'Забрать';
+      return 'Подбирать';
 
     default:
       return 'Неизвестно';
   }
 }
 
-export function getClientById(clients: Client[], clientId: number) {
-  return clients.find(client => client.id === clientId);
+export const getClientById = (clients: Client[], clientId: number) => {
+  return clients?.find(client => client.id === clientId) || null;
 }

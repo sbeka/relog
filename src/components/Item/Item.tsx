@@ -9,7 +9,7 @@ function Item(props: any) {
         <img src="./assets/icon/box.svg" alt="item"/>
       </div>
       <div className="item-data">
-        <h4>{getClientById(props.clients, props.item.client_id)?.name || 'Нет данных'}</h4>
+        <h4>{props.client?.name || 'Нет данных'}</h4>
         <span className="type">{getLabelType(props.item.type)}</span>
         <span className="price">{props.item.price} &#8376;</span>
       </div>

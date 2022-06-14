@@ -4,6 +4,9 @@ import "leaflet/dist/leaflet.css";
 import Item from './components/Item/Item';
 import { AppState } from './shared/types';
 import MyMap from './components/MyMap/MyMap';
+// @ts-ignore
+import { FixedSizeList as List } from 'react-window';
+import { getClientById } from './shared/utils';
 
 
 class App extends React.Component<any, AppState> {
@@ -40,11 +43,15 @@ class App extends React.Component<any, AppState> {
       <div className="App">
 
         <div className="left" id={'left'}>
-          <div style={{overflowY:'scroll',height:'100%'}}>
-            {items.map((item: any, i: number) => (
-              <Item item={item} key={i} clients={clients} />
-            ))}
-          </div>
+          <List
+            itemData={items}
+            itemCount={items.length}
+            itemSize={83.5}
+            height={600}
+            width={399}
+          >
+            {this.row.bind(this)}
+          </List>
         </div>
 
         <div className="content" id={'content'}>
@@ -54,6 +61,13 @@ class App extends React.Component<any, AppState> {
         <div className="clear"></div>
       </div>
     );
+  }
+
+  row({ data, index, style }: any) {
+    const client = getClientById(this.state.clients, data[index].client_id);
+    return (<div style={style}>
+      <Item item={data[index]} client={client} />
+    </div>);
   }
 
 }
