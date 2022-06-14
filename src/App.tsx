@@ -1,37 +1,61 @@
 import React from "react";
-
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
-import { addressPoints } from "./realworld";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import './App.css';
 import "leaflet/dist/leaflet.css";
-type AdressPoint = Array<[number, number, string]>;
+import Item from './components/Item/Item';
+import { AppState } from './shared/types';
+import MyMap from './components/MyMap/MyMap';
 
-function App() {
-  return (
-    <div>
-      <h1>10.000 marker</h1>
-      <MapContainer
-        style={{ height: "500px" }}
-        center={[-41.975762, 172.934298]}
-        zoom={4}
-        scrollWheelZoom={true}
-      >
-        <TileLayer
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <MarkerClusterGroup chunkedLoading>
-          {(addressPoints as AdressPoint).map((address, index) => (
-            <Marker
-              key={index}
-              position={[address[0], address[1]]}
-              title={address[2]}
-            ></Marker>
-          ))}
-        </MarkerClusterGroup>
-      </MapContainer>
-    </div>
-  );
+
+class App extends React.Component<any, AppState> {
+
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      items: [],
+      clients: [],
+      dataIsLoaded: false,
+    };
+  }
+
+  componentDidMount() {
+    Promise.all([
+      fetch("./assets/database/NeRelog_clients.json").then(res => res.json()),
+      fetch("./assets/database/NeRelog_apps.json").then(res => res.json()),
+    ])
+      .then(([clients, items]) => {
+        this.setState({
+          items: items,
+          clients: clients,
+          dataIsLoaded: true,
+        });
+      });
+  }
+
+  render() {
+    const { dataIsLoaded, items, clients } = this.state;
+    if (!dataIsLoaded) return <div><h1> Please wait some time.... </h1></div> ;
+
+    return (
+      <div className="App">
+
+        <div className="left">
+          <div style={{overflowY:'scroll',height:'100%'}}>
+            {items.map((item: any, i: number) => (
+              <Item item={item} key={i} clients={clients} />
+            ))}
+          </div>
+        </div>
+
+        <div className="content">
+          <MyMap items={items} clients={clients} />
+        </div>
+
+        <div className="clear"></div>
+      </div>
+    );
+  }
+
 }
 
 export default App;
