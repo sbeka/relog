@@ -39,7 +39,7 @@ class App extends React.Component<any, AppState> {
     return (
       <div className="App">
 
-        <div className="left">
+        <div className="left" id={'left'}>
           <div style={{overflowY:'scroll',height:'100%'}}>
             {items.map((item: any, i: number) => (
               <Item item={item} key={i} clients={clients} />
@@ -47,7 +47,7 @@ class App extends React.Component<any, AppState> {
           </div>
         </div>
 
-        <div className="content">
+        <div className="content" id={'content'}>
           <MyMap items={items} clients={clients} />
         </div>
 
